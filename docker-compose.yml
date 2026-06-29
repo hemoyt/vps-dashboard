@@ -1,0 +1,27 @@
+# VPSphere — VPS Management Dashboard
+# Deploys alongside Coolify on your VPS
+#
+# Usage:
+#   1. Copy .env.example to .env and set your password
+#   2. docker compose up -d
+#   3. Access at http://your-vps:8080
+
+services:
+  vpsphere:
+    build: .
+    container_name: vpsphere
+    restart: unless-stopped
+    ports:
+      - "${VPSPHERE_PORT:-8080}:8080"
+    volumes:
+      # Mount the host filesystem so VPSphere can manage it
+      - /:/host:rw
+      # Optional: bind Docker socket for container management (future)
+      # - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - VPSPHERE_PASSWORD=${VPSPHERE_PASSWORD:-admin}
+      - VPSPHERE_SECRET=${VPSPHERE_SECRET}
+      - VPSPHERE_ROOT=/host
+      - VPSPHERE_EXPIRY=${VPSPHERE_EXPIRY:-24}
+    pid: host  # Needed for accurate process/CPU stats
+    # If you don't want full host access, comment out pid: host and set VPSPHERE_ROOT to a specific path

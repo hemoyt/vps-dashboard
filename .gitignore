@@ -3,3 +3,7 @@ __pycache__/
 .env
 .venv/
 venv/
+
+# Added 2026-06-30
+*.tmp
+*.log
